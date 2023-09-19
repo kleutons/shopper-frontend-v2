@@ -8,9 +8,13 @@ export type TypeProduct = {
 export type TypeProducts = TypeProduct[];
 
 export interface TypeProductValidade extends TypeProduct {
-    new_price: number;
-    isPack: boolean;
+    new_price: number;    
     typeProduct: string;
-    isError: boolean;
-    returnError?: string;
+    composePack: {code: number, qty?:number}[] | null;
+    validadeError: string[];
 }
+
+export type TypeRerturnValidade = {
+    errorHeader: string[] | null;
+    productsValidade: TypeProductValidade[]
+} 

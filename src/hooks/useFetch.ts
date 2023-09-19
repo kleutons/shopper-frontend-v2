@@ -1,7 +1,8 @@
-import axios, { AxiosError } from "axios";
+// import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
-const URL_API = 'http://localhost:4000';
+const URL_API = 'http://localhost:3002';
 
 const api = axios.create({
     baseURL: URL_API
@@ -9,80 +10,106 @@ const api = axios.create({
 
 export function useFetchGet<T = unknown>(url: string){
     
-    const  [data, setData] = useState<T | null>(null);
-    const  [error, setError] = useState<Error | Response | null>(null);  
+    const  [data, setData] = useState<{ return?: T, error?: string}>({}); 
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect( () => {
+        const abortController = new AbortController();
 
         const fetchUrl = URL_API+url;
-        fetch(fetchUrl).then(response => {
-            if(response.ok){
-                return response.json();
-            }else{
-                setError(response);
+
+        fetch(fetchUrl, { signal: abortController.signal })
+        .then(response => {
+            
+            if (!response.ok){
+                throw new Error('Network response was not ok');
             }
-           
+            return response.json();
         }).then((data) =>{
-            setData(data)
+            setData({ return: data});
         }).catch((err) =>{
-            setError(err);
+            
+            if (err.name !== 'AbortError'){
+                setData({ error: err.message});
+                setLoading(false);
+            }
+        }).finally(() =>{
+            setLoading(false);
         });
 
+        return () => {
+            abortController.abort();
+          };
     }, [url])
 
-    return { data, error }
+    return { data, loading  }
 }
 
-export function useFetchPostForm(url: string, formData: FormData){
+export function useFetchPostForm<T = unknown>(url: string, formData: FormData, method: 'post' | 'put' = 'post'){
 
-    interface CustomAxiosError extends AxiosError {
-        data?: { error: String };
-      }
+    // interface CustomAxiosError extends AxiosError {
+    //     data?: { error: string };
+    //   }
 
-    interface CustomResponse extends Response {
-        data: String;
-    }
+    // interface CustomResponse extends Response {
+    //     data: string;
+    // }
 
       
-    const [isRequestSent, setIsRequestSent] = useState(false);
-    const [data, setData] = useState<CustomResponse | null>(null);
-    const [error, setError] = useState<CustomAxiosError | null>(null);
+    const [isSendRequest, sendRequest] = useState(false);
+    // const [data, setData] = useState<CustomResponse | null>(null);
+    // const [error, setError] = useState<CustomAxiosError | null>(null);
+
+    const  [data, setData] = useState<{ return?: T, error?: string}>({}); 
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect( () => {
-    if (isRequestSent) {
-        setData(null);
-
-        const fetch = async () => {
-            //Axios
-            api.post(url, formData,{
+    if (isSendRequest) {
+        setLoading(true);
+        
+        
+        //Axios Methods
+        let methodAxios;
+        if(method == 'put' ){
+            
+            methodAxios = api.put(url, formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-            })
-            .then(response => {
-                if(response.data){
-                    setData(response.data);
+            });
+        }else{
+
+            methodAxios = api.post(url, formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
-            })
-            .catch(err => {              
-                if(err.response){
-                    setError(err.response);
-                }else{
-                    setError(err);
-                }
-                              
-            }).finally(() =>{
-                setIsRequestSent(false);
-            })
+            });
+
         }
-
-        fetch();
+        
+        //Axios
+        methodAxios
+        .then(response => {
+            if(response.data){
+                setData({return: response.data});
+            }
+        })
+        .catch(err => {              
+            if(err.response){
+                setData({error: err.response});
+            }else{
+                setData({error: err});
+            }
+                            
+        }).finally(() =>{
+            sendRequest(false);
+            setLoading(false);
+        })
+    
+        
     }
-    }, [url, formData, isRequestSent]);
+    }, [url, formData, loading, isSendRequest, method]);
 
-    const sendRequest = () => {
-        setIsRequestSent(true);
-    };
 
-    return { data, setData, error, setError, sendRequest }
+    return { data, setData, sendRequest }
 }

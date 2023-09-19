@@ -1,97 +1,102 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { useFetchPostForm } from "../../hooks/useFetch";
-import { TypeProductValidade } from "../../types/typeProduct";
+import { TypeProductValidade, TypeRerturnValidade } from "../../types/typeProduct";
 import { toast } from "react-hot-toast";
-import { Btn, FormContainer, Input, Label, StyledTable } from "../style/style";
+import { Btn, FormContainer, Input, Label, StyledTable, DivError } from "../style/style";
 import { formatCurrency } from "../../utils/format";
-import { clear } from "console";
+// import { clear } from "console";
 
 export default function HomePage(){
-    const [formData] = useState(new FormData());
-    const { data, setData, error, setError, sendRequest } = useFetchPostForm('/product/validade-csv', formData);
-    const { data: dataBulk, setData: setDataBulk, error: errorBulk, sendRequest: sendBulk } = useFetchPostForm('/product/bulk-update', formData);
+    const [formData, setFormData] = useState(new FormData());
+    const [btnValidate, setBntValidate] = useState(true);
+    const { data, setData, sendRequest } = useFetchPostForm<TypeRerturnValidade>('/product/update-csv', formData);
+    
+    const { data: dataBulk, setData: setDataBulk, sendRequest: sendBulk } = useFetchPostForm('/product/update-csv', formData, 'put');
+    
     const fileInputRef = React.createRef<HTMLInputElement>();
     const formRef = React.createRef<HTMLFormElement>();
     const [btnDisabled, setBtnDisabled] = useState(true);
 
     useEffect( () => {
+        
+        const dataReturn = data.return;
+        if(dataReturn){
+            
+            const dataHeader = dataReturn.errorHeader;
+            const dataProducts = dataReturn.productsValidade;
 
-        if (error) {           
-            if (error.data) {
-                const errorRetun = String(error.data.error);
-                if(errorRetun !== undefined){
-                    toast.error('Tente Novamente');
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                }else{
-                    toast.error(String(error.data.error));
+            if(dataHeader){
+                toast.error(dataHeader.join(', '));
+            }
+
+            if(dataProducts){
+                const hasInvalidCSV = dataProducts.find((item:TypeProductValidade) => item.validadeError.length > 0);
+                const isValidCSV = hasInvalidCSV ? false : true;
+                setBtnDisabled(isValidCSV);
+                if(!isValidCSV){
+                    toast.error('CSV inválido, Veja Pendencias!');
                 }
-            }else
-            if(error.message === 'Network Error'){
-                toast.error('Network Error, Tente Novamente');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            }else{
-                console.log(error);
-                console.log(error.message);
-            }   
-            setError(null);
-
-        }
-
-        if(Array.isArray(data)){
-            const invalidCSV = data.find((item:TypeProductValidade) => item.isError === true);
-            setBtnDisabled(!invalidCSV);
-            if(invalidCSV){
-                toast.error('CSV inválido, Veja Pendencias!');
             }
+            
+
+
         }
 
-        if(dataBulk){            
-            formData.delete('file'); 
-            if(dataBulk.data){
-                toast.success(String(dataBulk.data));
-                setTimeout(() => {setDataBulk(null);
-                }, 200);
-            }
-        }
-    }, [data, error, setError, setData, dataBulk, setDataBulk, errorBulk, formData])
+    
+    }, [data])
 
 
    
-    const handleFileChange = (event:any) => {
-        const file = event.target.files[0];
-        formData.append('file', file);
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            const newFormData = new FormData(); 
+            newFormData.append('file', file);
+            setFormData(newFormData); 
+        }
     };
 
-
-    const handleSubmit = (event:any) => {
-        event.preventDefault();
-        sendRequest();
-
-        
-        // Limpar após o envio
-        if (fileInputRef.current){
+    const cleanFileForm = () => {
+         // Limpar arquivo do formulario
+         if (fileInputRef.current) {
             fileInputRef.current.value = '';
+            setFormData(new FormData());
         }
+    }
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        sendRequest(true);
+        setBntValidate(false)
     }
               
 
-     const handleSubmitAtualizar = (event:any) => {
+     const handleSubmitAtualizar = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
         if (formRef.current) {
-            event.preventDefault();
-            sendBulk();
-            setData(null);
+            event.preventDefault();            
+            setData({return: undefined});
         // Limpar após o envio
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-            
-        }
+        cleanFileForm();
         }
     }
+
+
+    const renderValidity = (item: any) => {
+        if (item.validadeError && item.validadeError.length === 0) {
+          return '✅';
+        } else if (item.validadeError) {
+          return (
+            <ul>
+              {item.validadeError.map((error: string[], index: number) => (
+                <li key={index}>{'⛔ ' + error}</li>
+              ))}
+            </ul>
+          );
+        }
+        return null;
+    };
 
     return(
         <>
@@ -99,12 +104,34 @@ export default function HomePage(){
 
         <FormContainer ref={formRef} onSubmit={handleSubmit}>
             <Label htmlFor="fileCsv">Escolha um arquivo CSV, e click em validar:</Label>
-            <Input type="file" id="fileCsv" name="file" accept=".csv" onChange={handleFileChange} ref={fileInputRef} />
-            <Btn type="submit">VALIDAR</Btn>
+            
+            
+            {btnValidate ? ( 
+                <>
+                    <Input type="file" id="fileCsv" name="file" accept=".csv" onMouseDown={cleanFileForm} onChange={handleFileChange} ref={fileInputRef} />
+                    <Btn type="submit">VALIDAR</Btn>
+                </>
+            ): (
+                <Btn type="button" onClick={() => location.reload()}>ENVIAR UM NOVO ARQUIVO</Btn>
+            )}
         </FormContainer>
 
-        <h2>{data ? 'Produtos Para Atualizar' : 'Envie um Arquivo CSV'}</h2>
-        {data && Array.isArray(data) && data.length > 0 && (
+        <h2>{data.return?.productsValidade ? 'Produtos Para Atualizar' : 'Envie um Arquivo CSV'}</h2>
+        {
+            data.return?.errorHeader &&
+            (
+                <DivError>
+                    <b>Arquivo Inválido:</b>
+                    {data.return.errorHeader.map(item => (
+                        <div> 
+                            - {item} 
+                        </div> 
+                    ))}
+                </DivError>
+            )
+            
+        }
+        {data.return?.productsValidade && Array.isArray(data.return.productsValidade) && data.return.productsValidade.length > 0 && (
             <>
                 
                 <StyledTable>
@@ -120,21 +147,22 @@ export default function HomePage(){
                     </thead>
                     <tbody>
                         
-                        {data.map((item: TypeProductValidade) => (
+                        
+                        {data.return.productsValidade.map((item: any) => (
                             <tr key={item.code}>
                                 <td>{item.code}</td>
                                 <td>{item.name}</td>
                                 <td className="center">{formatCurrency(item.sales_price)}</td>
                                 <td className="center">{formatCurrency(item.new_price)}</td>
                                 <td className="center">{item.typeProduct}</td>
-                                <td>{!item.isError ? '✅' : '⛔'} {item.returnError}</td>
+                                <td>{renderValidity(item)} </td>
                             </tr>
                             
                         ))}
                     </tbody>
                 </StyledTable>
                 
-                <Btn disabled={!btnDisabled} onClick={handleSubmitAtualizar}>Atualizar</Btn>
+                <Btn disabled={!btnDisabled} onClick={handleSubmitAtualizar}>ATUALIZAR</Btn>
             </>
         )}        
         

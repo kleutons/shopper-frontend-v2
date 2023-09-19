@@ -1,5 +1,10 @@
 import styled from "styled-components";
 
+export const DivError = styled.div`
+ color: red;
+
+`
+
 export const StyledTable  = styled.table`
     width: 100%;
     border-collapse: collapse;
@@ -21,6 +26,15 @@ export const StyledTable  = styled.table`
 
     tr:hover {
         background-color: #f5f5f5;
+    }
+
+    td{
+      ul{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: #b50404;
+      }
     }
 
     .center{
@@ -50,7 +64,7 @@ export const Input = styled.input`
 `;
 
 export const Btn = styled.button`
-  background-color: #007bff;
+  background-color: #303596;
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -60,7 +74,7 @@ export const Btn = styled.button`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #006be0;
   }
 
   &:disabled {
