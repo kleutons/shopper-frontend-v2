@@ -78,8 +78,12 @@ export default function HomePage(){
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        sendRequest(true);
-        setBntValidate(false)
+        if(fileInputRef.current && fileInputRef.current.value !== ''){
+            sendRequest(true);
+            setBntValidate(false)
+        }else{
+            toast.error('Selecione um arquivo para enviar');
+        }
     }
               
 
