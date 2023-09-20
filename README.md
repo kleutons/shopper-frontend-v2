@@ -1,4 +1,4 @@
-# 🚀 Desafio FullStak Shopper.com.br (Repositório FrontEnd)
+# 🚀 Desafio FullStak Shopper.com.br (Repositório FrontEnd - VERSÃO 2)
 
 Bem-vindo(a). Este é o desafio Front end, para a Shopper.com.br!
 O objetivo deste desafio é um teste técnico para avaliar habilidades em desenvolvimento de software.
