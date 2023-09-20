@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const URL_API = 'http://localhost:3002';
+const URL_API = import.meta.env.VITE_REACT_APP_API_URL;
 
 const api = axios.create({
     baseURL: URL_API
