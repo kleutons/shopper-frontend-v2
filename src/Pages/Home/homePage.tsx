@@ -12,7 +12,7 @@ export default function HomePage(){
     const [btnValidate, setBntValidate] = useState(true);
     const { data, setData, sendRequest } = useFetchPostForm<TypeRerturnValidade>('/product/update-csv', formData);
     
-    const { data: dataBulk, setData: setDataBulk, sendRequest: sendBulk } = useFetchPostForm('/product/update-csv', formData, 'put');
+    const { data: dataBulk, sendRequest: sendBulk } = useFetchPostForm<any>('/product/update-csv', formData, 'put');
     
     const fileInputRef = React.createRef<HTMLInputElement>();
     const formRef = React.createRef<HTMLFormElement>();
@@ -38,13 +38,23 @@ export default function HomePage(){
                     toast.error('CSV inválido, Veja Pendencias!');
                 }
             }
-            
+        }    
+        
+        if(dataBulk){
+            if(dataBulk.error){
+                toast.error(dataBulk.error);
+            }
 
+            if(dataBulk.return){
+                toast.success(dataBulk.return);
+                setTimeout( () => {
+                    location.reload();
+                }, 4000)
+            }
 
         }
-
     
-    }, [data])
+    }, [data, dataBulk])
 
 
    
@@ -77,8 +87,9 @@ export default function HomePage(){
         if (formRef.current) {
             event.preventDefault();            
             setData({return: undefined});
-        // Limpar após o envio
-        cleanFileForm();
+            sendBulk(true);
+            // Limpar após o envio
+            cleanFileForm();
         }
     }
 
@@ -100,7 +111,7 @@ export default function HomePage(){
 
     return(
         <>
-        <h1>Atualizar Preço</h1>
+        <h1>Atualizar Preço <span>*Ver Regras</span></h1>
 
         <FormContainer ref={formRef} onSubmit={handleSubmit}>
             <Label htmlFor="fileCsv">Escolha um arquivo CSV, e click em validar:</Label>

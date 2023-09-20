@@ -46,20 +46,8 @@ export function useFetchGet<T = unknown>(url: string){
 }
 
 export function useFetchPostForm<T = unknown>(url: string, formData: FormData, method: 'post' | 'put' = 'post'){
-
-    // interface CustomAxiosError extends AxiosError {
-    //     data?: { error: string };
-    //   }
-
-    // interface CustomResponse extends Response {
-    //     data: string;
-    // }
-
       
     const [isSendRequest, sendRequest] = useState(false);
-    // const [data, setData] = useState<CustomResponse | null>(null);
-    // const [error, setError] = useState<CustomAxiosError | null>(null);
-
     const  [data, setData] = useState<{ return?: T, error?: string}>({}); 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -94,10 +82,10 @@ export function useFetchPostForm<T = unknown>(url: string, formData: FormData, m
                 setData({return: response.data});
             }
         })
-        .catch(err => {              
-            if(err.response){
-                setData({error: err.response});
-            }else{
+        .catch(err => {        
+            if(err.response){            
+                setData({error: err.response.data});
+            }else{                
                 setData({error: err});
             }
                             
