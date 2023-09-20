@@ -68,7 +68,7 @@ Chegou a hora de colocar a mão na massa!
 git clone https://github.com/kleutons/shopper-frontend-v2
 ```
 
-2. Configurar variável de ambiente, arquivo [.env](/.env)
+2. Configurar variável de ambiente para apontar a url do servidor backend, arquivo [.env](/.env)
 ```
 VITE_REACT_APP_API_URL=http://localhost:3002
 ```
