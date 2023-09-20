@@ -27,4 +27,16 @@ export const Header = styled.header`
     nav a:hover{
         text-decoration: underline;
     }
+
+
+    @media screen and (max-width: 600px) {
+        >div.container img{
+            max-width: 120px;
+            margin-right: 10px;
+        } 
+        nav ul{
+            font-size: 14px;
+            gap: 12px;
+        }
+    }
 `

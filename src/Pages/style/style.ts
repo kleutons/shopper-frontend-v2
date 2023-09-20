@@ -1,10 +1,26 @@
 import styled from "styled-components";
 
+export const HomeH1 = styled.h1`
+  >span{
+    font-size: 14px;
+    font-weight: 400;
+    color: #303596;
+    cursor: pointer;    
+  }
+`;
 export const DivError = styled.div`
  color: red;
-
 `
+export const DivContainerTable = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  
 
+  @media screen and (max-width: 790px) {
+    white-space: nowrap;
+  }
+
+`;
 export const StyledTable  = styled.table`
     width: 100%;
     border-collapse: collapse;
@@ -81,4 +97,15 @@ export const Btn = styled.button`
     background-color: #ccc;
     cursor: not-allowed;
   }
-`;
+`;  
+
+export const RulesDiv = styled.div`
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin-bottom: 20px;
+  >h4{
+    margin: 0;
+    text-transform: uppercase;
+    text-align: center;
+  }
+`

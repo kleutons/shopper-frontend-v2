@@ -1,22 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, { useEffect, useState } from "react";
 import { useFetchPostForm } from "../../hooks/useFetch";
 import { TypeProductValidade, TypeRerturnValidade } from "../../types/typeProduct";
 import { toast } from "react-hot-toast";
-import { Btn, FormContainer, Input, Label, StyledTable, DivError } from "../style/style";
+import { Btn, FormContainer, Input, Label, StyledTable, DivError, HomeH1, DivContainerTable, RulesDiv } from "../style/style";
 import { formatCurrency } from "../../utils/format";
-// import { clear } from "console";
+import RulesText from "../../Components/RulesText/rulestext";
+
 
 export default function HomePage(){
     const [formData, setFormData] = useState(new FormData());
     const [btnValidate, setBntValidate] = useState(true);
     const { data, setData, sendRequest } = useFetchPostForm<TypeRerturnValidade>('/product/update-csv', formData);
-    
-    const { data: dataBulk, sendRequest: sendBulk } = useFetchPostForm<any>('/product/update-csv', formData, 'put');
+    const { data: dataBulk, sendRequest: sendBulk } = useFetchPostForm<string>('/product/update-csv', formData, 'put');
     
     const fileInputRef = React.createRef<HTMLInputElement>();
     const formRef = React.createRef<HTMLFormElement>();
     const [btnDisabled, setBtnDisabled] = useState(true);
+    const [showRules, setShowRules] = useState(false);
 
     useEffect( () => {
         
@@ -94,14 +95,14 @@ export default function HomePage(){
     }
 
 
-    const renderValidity = (item: any) => {
+    const renderValidity = (item: TypeProductValidade ) => {
         if (item.validadeError && item.validadeError.length === 0) {
           return '✅';
         } else if (item.validadeError) {
           return (
             <ul>
-              {item.validadeError.map((error: string[], index: number) => (
-                <li key={index}>{'⛔ ' + error}</li>
+              {item.validadeError.map((error, index: number) => (
+                <li key={index - item.code}>{'⛔ ' + error}</li>
               ))}
             </ul>
           );
@@ -111,8 +112,14 @@ export default function HomePage(){
 
     return(
         <>
-        <h1>Atualizar Preço <span>*Ver Regras</span></h1>
+        <HomeH1>Atualizar Preço <span onClick={() => setShowRules(!showRules)}>*Ver Regras</span></HomeH1>
 
+        {showRules && (
+            <RulesDiv>
+                <h4>Regras para envio do arquivo CSV:</h4>
+                <RulesText/>
+            </RulesDiv>
+        )}
         <FormContainer ref={formRef} onSubmit={handleSubmit}>
             <Label htmlFor="fileCsv">Escolha um arquivo CSV, e click em validar:</Label>
             
@@ -144,35 +151,36 @@ export default function HomePage(){
         }
         {data.return?.productsValidade && Array.isArray(data.return.productsValidade) && data.return.productsValidade.length > 0 && (
             <>
-                
-                <StyledTable>
-                    <thead>
-                        <tr>
-                        <th>Cod.</th>
-                        <th>Nome</th>
-                        <th className="center">Preço Atual</th>
-                        <th className="center">Novo Preço</th>
-                        <th className="center">Tipo</th>
-                        <th className="pendencia center">Pendência</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        
-                        {data.return.productsValidade.map((item: any) => (
-                            <tr key={item.code}>
-                                <td>{item.code}</td>
-                                <td>{item.name}</td>
-                                <td className="center">{formatCurrency(item.sales_price)}</td>
-                                <td className="center">{formatCurrency(item.new_price)}</td>
-                                <td className="center">{item.typeProduct}</td>
-                                <td>{renderValidity(item)} </td>
+                <DivContainerTable>
+                    <StyledTable>
+                        <thead>
+                            <tr>
+                            <th>Cod.</th>
+                            <th>Nome</th>
+                            <th className="center">Preço Atual</th>
+                            <th className="center">Novo Preço</th>
+                            <th className="center">Tipo</th>
+                            <th className="pendencia center">Pendência</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             
-                        ))}
-                    </tbody>
-                </StyledTable>
-                
+                            
+                            {data.return.productsValidade.map((item: TypeProductValidade) => (
+                                <tr key={item.code}>
+                                    <td>{item.code}</td>
+                                    <td>{item.name}</td>
+                                    <td className="center">{formatCurrency(item.sales_price)}</td>
+                                    <td className="center">{formatCurrency(item.new_price)}</td>
+                                    <td className="center">{item.typeProduct}</td>
+                                    <td>{renderValidity(item)} </td>
+                                </tr>
+                                
+                            ))}
+                        </tbody>
+                    </StyledTable>
+                </DivContainerTable>
+
                 <Btn disabled={!btnDisabled} onClick={handleSubmitAtualizar}>ATUALIZAR</Btn>
             </>
         )}        

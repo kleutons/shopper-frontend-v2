@@ -1,7 +1,7 @@
 import { useFetchGet } from "../../hooks/useFetch";
 import { TypeProducts } from "../../types/typeProduct";
 import { formatCurrency } from "../../utils/format";
-import { StyledTable } from "../style/style";
+import { DivContainerTable, StyledTable } from "../style/style";
 import { toast } from "react-hot-toast";
 
 export default function ProductsPage(){
@@ -36,7 +36,7 @@ export default function ProductsPage(){
                 Lista de Produtos Vazia, ou falha ao carregar...
             </div>
         ) : (
-            <>
+            <DivContainerTable>
                 <StyledTable>
                     <thead>
                         <tr>
@@ -60,7 +60,7 @@ export default function ProductsPage(){
                         
                     </tbody>
                 </StyledTable>
-            </>
+            </DivContainerTable>
         )}
         
         <br/>
@@ -76,7 +76,7 @@ export default function ProductsPage(){
                 Lista de Packs Vazia...
             </div>
         ) : ( 
-            <>
+            <DivContainerTable>
                 <StyledTable>
                     <thead>
                         <tr>
@@ -100,7 +100,7 @@ export default function ProductsPage(){
                         
                     </tbody>
                 </StyledTable>
-            </>
+            </DivContainerTable>
         )}
 
         </>
