@@ -2,11 +2,11 @@
 const menuMain = [
     {
         name: "Atualizar Preços",
-        link: "/shopper-frontend-v2"
+        link: "/"
     },
     {
         name: "Exibir Produtos",
-        link: "/shopper-frontend-v2/products"
+        link: "/products"
     }
 ]
 
