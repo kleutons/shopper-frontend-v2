@@ -51,13 +51,12 @@ export function useFetchPostForm<T = unknown>(url: string, formData: FormData, m
       
     const [isSendRequest, sendRequest] = useState(false);
     const  [data, setData] = useState<{ return?: T, error?: string}>({}); 
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect( () => {
+    
     if (isSendRequest) {
         setLoading(true);
-        
-        
         //Axios Methods
         let methodAxios;
         if(method == 'put' ){

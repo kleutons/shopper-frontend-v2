@@ -19,6 +19,7 @@ export default function HomePage(){
     const [btnDisabled, setBtnDisabled] = useState(true);
     const [showRules, setShowRules] = useState(false);
 
+
     if(loading || loadBulk){
         toast.loading('Carregando...', {
             id: 'load'
@@ -147,6 +148,15 @@ export default function HomePage(){
         </FormContainer>
 
         <h2>{data.return?.productsValidade ? 'Produtos Para Atualizar' : 'Envie um Arquivo CSV'}</h2>
+        
+        {loading && (
+            <div>
+                <b>Carregando...</b> 
+                <br/>
+                * Por se tratar de um servidor backend gratuito e internacional, é possível que a primeira exibição da página leve mais tempo do que o habitual, o que não ocorre no ambiente localhost.
+            </div>
+        )}
+
         {
             data.return?.errorHeader &&
             (
