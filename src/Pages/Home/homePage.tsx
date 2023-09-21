@@ -37,7 +37,9 @@ export default function HomePage(){
             const dataProducts = dataReturn.productsValidade;
 
             if(dataHeader){
-                toast.error(dataHeader.join(', '));
+                toast.error(dataHeader.join(', '),{
+                    id: 'dataHeader'
+                });
             }
 
             if(dataProducts){
@@ -45,18 +47,24 @@ export default function HomePage(){
                 const isValidCSV = hasInvalidCSV ? false : true;
                 setBtnDisabled(isValidCSV);
                 if(!isValidCSV){
-                    toast.error('CSV inválido, Veja Pendencias!');
+                    toast.error('CSV inválido, Veja Pendencias!',{
+                        id: 'errorCsv'
+                    });
                 }
             }
         }    
         
         if(dataBulk){
             if(dataBulk.error){
-                toast.error(dataBulk.error);
+                toast.error(dataBulk.error,{
+                    id: 'dataBulk'
+                });
             }
 
             if(dataBulk.return){
-                toast.success(dataBulk.return);
+                toast.success(dataBulk.return,{
+                    id: 'dataBulk'
+                });
                 setTimeout( () => {
                     location.reload();
                 }, 4000)
