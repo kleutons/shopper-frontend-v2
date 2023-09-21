@@ -6,7 +6,7 @@ O objetivo deste desafio é um teste técnico para avaliar habilidades em desenv
 ## [Projeto Online](https://shopper-frontend-v2.vercel.app)
 
 - https://shopper-frontend-v2.vercel.app
-- Por se tratar de um servidor backend gratuito de alcance internacional, é possível que a primeira exibição da página leve mais tempo do que o habitual.
+- Por se tratar de um servidor backend gratuito e internacional, é possível que a primeira exibição da página leve mais tempo do que o habitual, o que não ocorre no ambiente localhost.
 
 ### Screenshots
 

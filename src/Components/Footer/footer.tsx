@@ -13,7 +13,7 @@ export default function Footer(){
                     </a>
                 </div>
                 <div>
-                    * Por se tratar de um servidor backend gratuito de alcance internacional, é possível que a primeira exibição da página leve mais tempo do que o habitual.
+                    * Por se tratar de um servidor backend gratuito e internacional, é possível que a primeira exibição da página leve mais tempo do que o habitual, o que não ocorre no ambiente localhost.
                 </div>
              </div>
         </FooterContainer>

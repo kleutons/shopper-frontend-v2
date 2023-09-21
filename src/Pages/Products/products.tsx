@@ -22,92 +22,93 @@ export default function ProductsPage(){
         });
     }
 
-    console.log(loadUnique);
+    if(loadUnique || loadPack){
+        toast.loading('Carregando...', {
+            id: 'load'
+        })
+    }else{
+        toast.remove('load');
+    }
+
+    let contentUnique;
+
+    if(loadUnique){
+        contentUnique = <div>Carregando...</div>;
+    }else if(!uniqueData.return && !uniqueData.error){
+        contentUnique = <div>Lista de Produtos Vazia, ou falha ao carregar...</div>;
+    }else if(uniqueData.return){
+        contentUnique = (<DivContainerTable>
+                            <StyledTable>
+                                <thead>
+                                    <tr>
+                                    <th>Cod.</th>
+                                    <th>Nome</th>
+                                    <th>Custo</th>
+                                    <th>Preço de Venda</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {uniqueData.return.map((item) => (
+                                            <tr key={item.code}>
+                                                <td>{item.code}</td>
+                                                <td>{item.name}</td>
+                                                <td>{formatCurrency(item.cost_price)}</td>
+                                                <td>{formatCurrency(item.sales_price)}</td>
+                                            </tr>
+                                            )
+                                    )}
+                                    
+                                </tbody>
+                            </StyledTable>
+                        </DivContainerTable>);
+    }
+
+
+    let contentPack;
+    if(loadPack){
+        contentPack = <div>Carregando...</div>;
+    }else if(!packData.return && !packData.error){
+        contentPack = <div>Lista de Packs Vazia...</div>;
+    }else if(packData.return){
+        contentPack = (<DivContainerTable>
+                            <StyledTable>
+                                <thead>
+                                    <tr>
+                                    <th>Cod.</th>
+                                    <th>Nome</th>
+                                    <th>Custo</th>
+                                    <th>Preço de Venda</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {packData.return?.map((item) => (
+                                            <tr key={item.code}>
+                                                <td>{item.code}</td>
+                                                <td>{item.name}</td>
+                                                <td>{formatCurrency(item.cost_price)}</td>
+                                                <td>{formatCurrency(item.sales_price)}</td>
+                                            </tr>
+                                            )
+                                    )}
+                                    
+                                </tbody>
+                            </StyledTable>
+                        </DivContainerTable>);
+    }
 
     return(
         <>
         <h1>Exibir Produtos - (Financeiro)</h1>
 
         <h2>Produtos Unitários</h2>
-        {loadUnique && (
-            <div>Carregando...</div>
-        )}
-
-        {!uniqueData.return && !uniqueData.error && (
-            <div>
-                Lista de Produtos Vazia, ou falha ao carregar...
-            </div>
-        )}
-
-        {uniqueData.return && (
-            <DivContainerTable>
-                <StyledTable>
-                    <thead>
-                        <tr>
-                        <th>Cod.</th>
-                        <th>Nome</th>
-                        <th>Custo</th>
-                        <th>Preço de Venda</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        {uniqueData.return.map((item) => (
-                                <tr key={item.code}>
-                                    <td>{item.code}</td>
-                                    <td>{item.name}</td>
-                                    <td>{formatCurrency(item.cost_price)}</td>
-                                    <td>{formatCurrency(item.sales_price)}</td>
-                                </tr>
-                                )
-                        )}
-                        
-                    </tbody>
-                </StyledTable>
-            </DivContainerTable>
-        )}
+        {contentUnique}
         
         <br/>
         <hr/>
         <h2>Packs de Produtos</h2>
-
-        {loadPack && (
-            <div>Carregando...</div>
-        )}
-
-        {!packData.return && !packData.error && (
-            <div>
-                Lista de Packs Vazia...
-            </div>
-        )}
-
-        {packData.return && ( 
-            <DivContainerTable>
-                <StyledTable>
-                    <thead>
-                        <tr>
-                        <th>Cod.</th>
-                        <th>Nome</th>
-                        <th>Custo</th>
-                        <th>Preço de Venda</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        {packData.return?.map((item) => (
-                                <tr key={item.code}>
-                                    <td>{item.code}</td>
-                                    <td>{item.name}</td>
-                                    <td>{formatCurrency(item.cost_price)}</td>
-                                    <td>{formatCurrency(item.sales_price)}</td>
-                                </tr>
-                                )
-                        )}
-                        
-                    </tbody>
-                </StyledTable>
-            </DivContainerTable>
-        )}
+        {contentPack}
 
         </>
     )
