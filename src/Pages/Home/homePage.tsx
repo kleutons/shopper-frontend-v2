@@ -11,13 +11,21 @@ import RulesText from "../../Components/RulesText/rulestext";
 export default function HomePage(){
     const [formData, setFormData] = useState(new FormData());
     const [btnValidate, setBntValidate] = useState(true);
-    const { data, setData, sendRequest } = useFetchPostForm<TypeRerturnValidade>('/product/update-csv', formData);
-    const { data: dataBulk, sendRequest: sendBulk } = useFetchPostForm<string>('/product/update-csv', formData, 'put');
+    const { data, setData, sendRequest, loading } = useFetchPostForm<TypeRerturnValidade>('/product/update-csv', formData);
+    const { data: dataBulk, sendRequest: sendBulk, loading: loadBulk } = useFetchPostForm<string>('/product/update-csv', formData, 'put');
     
     const fileInputRef = React.createRef<HTMLInputElement>();
     const formRef = React.createRef<HTMLFormElement>();
     const [btnDisabled, setBtnDisabled] = useState(true);
     const [showRules, setShowRules] = useState(false);
+
+    if(loading || loadBulk){
+        toast.loading('Carregando...', {
+            id: 'load'
+        })
+    }else{
+        toast.remove('load');
+    }
 
     useEffect( () => {
         

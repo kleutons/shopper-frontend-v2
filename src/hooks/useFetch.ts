@@ -101,5 +101,5 @@ export function useFetchPostForm<T = unknown>(url: string, formData: FormData, m
     }, [url, formData, loading, isSendRequest, method]);
 
 
-    return { data, setData, sendRequest }
+    return { data, setData, sendRequest, loading }
 }
