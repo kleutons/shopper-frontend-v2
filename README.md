@@ -85,7 +85,7 @@ npm run dev
 
 5. Acessar WebSite FrontEnd na porta 5173
 ```
-http://localhost:5173/
+http://localhost:5173/shopper-frontend-v2
 ```
 
 ### Servidor BackEnd

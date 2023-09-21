@@ -15,8 +15,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           
-          <Route path='/' element={<HomePage/>} />
-          <Route path='/products' element={<ProductsPage/>} />
+          <Route path='/shopper-frontend-v2' element={<HomePage/>} />
+          <Route path='/shopper-frontend-v2/products' element={<ProductsPage/>} />
 
         </Routes>
       </BrowserRouter>
