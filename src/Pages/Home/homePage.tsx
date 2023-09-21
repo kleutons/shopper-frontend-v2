@@ -147,7 +147,9 @@ export default function HomePage(){
             )}
         </FormContainer>
 
-        <h2>{data.return?.productsValidade ? 'Produtos Para Atualizar' : 'Envie um Arquivo CSV'}</h2>
+        <h2>{data.return?.productsValidade ? 'Produtos Para Atualizar' : (
+            <a href="./atualizacao_preco_exemplo.csv">Baixe Arquivo Exemplo CSV</a>
+        )}</h2>
         
         {loading && (
             <div>
