@@ -22,20 +22,24 @@ export default function ProductsPage(){
         });
     }
 
+    console.log(loadUnique);
+
     return(
         <>
         <h1>Exibir Produtos - (Financeiro)</h1>
 
         <h2>Produtos Unitários</h2>
         {loadUnique && (
-            <div>loading</div>
+            <div>Carregando...</div>
         )}
 
-        {!uniqueData.return ? (
+        {!uniqueData.return && !uniqueData.error && (
             <div>
                 Lista de Produtos Vazia, ou falha ao carregar...
             </div>
-        ) : (
+        )}
+
+        {uniqueData.return && (
             <DivContainerTable>
                 <StyledTable>
                     <thead>
@@ -68,14 +72,16 @@ export default function ProductsPage(){
         <h2>Packs de Produtos</h2>
 
         {loadPack && (
-            <div>loading</div>
+            <div>Carregando...</div>
         )}
 
-        {!packData.return ? (
+        {!packData.return && !packData.error && (
             <div>
                 Lista de Packs Vazia...
             </div>
-        ) : ( 
+        )}
+
+        {packData.return && ( 
             <DivContainerTable>
                 <StyledTable>
                     <thead>

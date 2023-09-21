@@ -12,8 +12,11 @@ export function useFetchGet<T = unknown>(url: string){
     
     const  [data, setData] = useState<{ return?: T, error?: string}>({}); 
     const [loading, setLoading] = useState<boolean>(true);
+    
+    
 
     useEffect( () => {
+        setLoading(true);
         const abortController = new AbortController();
 
         const fetchUrl = URL_API+url;
@@ -31,7 +34,6 @@ export function useFetchGet<T = unknown>(url: string){
             
             if (err.name !== 'AbortError'){
                 setData({ error: err.message});
-                setLoading(false);
             }
         }).finally(() =>{
             setLoading(false);

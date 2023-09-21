@@ -12,6 +12,9 @@ export default function Footer(){
                         @kleutons
                     </a>
                 </div>
+                <div>
+                    * Por se tratar de um servidor backend gratuito de alcance internacional, é possível que a primeira exibição da página leve mais tempo do que o habitual.
+                </div>
              </div>
         </FooterContainer>
     )
