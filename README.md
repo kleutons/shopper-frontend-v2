@@ -3,9 +3,9 @@
 Bem-vindo(a). Este é o desafio Front end, para a Shopper.com.br!
 O objetivo deste desafio é um teste técnico para avaliar habilidades em desenvolvimento de software.
 
-## [Projeto Online](https://kleutons.github.io/shopper-frontend-v2)
+## [Projeto Online](https://shopper-frontend-v2.vercel.app)
 
-- https://kleutons.github.io/shopper-frontend-v2
+- https://shopper-frontend-v2.vercel.app
 
 ### Screenshots
 
